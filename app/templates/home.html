@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Home - Reellog{% endblock %}
+{% block content %}
+<div class="home-wrapper">
+    <nav>
+        <span class="logo">Reellog</span>
+        <span>Hi, {{ session.user_name }} | <a href="{{ url_for('auth.logout') }}">Logout</a></span>
+    </nav>
+    <h1>Your watchlist will go here</h1>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #0f0f0f;
+    color: #e8e8e8;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.auth-wrapper {
+    max-width: 360px;
+    margin: 80px auto;
+    padding: 24px;
+}
+
+.auth-wrapper input {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 10px;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: #e8e8e8;
+    border-radius: 6px;
+}
+
+.auth-wrapper button {
+    width: 100%;
+    padding: 10px;
+    background: #6c5ce7;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.flash-container {
+    max-width: 360px;
+    margin: 20px auto 0;
+}
+
+.flash {
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.flash-success { background: #1e3a2e; color: #4caf82; }
+.flash-danger { background: #3a1e1e; color: #e05252; }
+
+.home-wrapper nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.home-wrapper h1 {
+    padding: 40px;
+}
