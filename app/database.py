@@ -1,7 +1,7 @@
 import pymysql
-import config
-
-
+from app import config
+ 
+ 
 def get_connection():
     try:
         conn = pymysql.connect(
@@ -15,8 +15,8 @@ def get_connection():
     except Exception as e:
         print("Database connection failed:")
         print(e)
-
-
+ 
+ 
 def create_tables():
     conn = get_connection()
     cursor = conn.cursor()
