@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}My Watchlist - Reellog{% endblock %}
+{% block content %}
+<div class="watchlist-wrapper">
+    <nav>
+        <span class="logo">Reellog</span>
+        <span>
+            <a href="{{ url_for('watchlist.add_title') }}">+ Add Title</a> |
+            Hi, {{ session.user_name }} | <a href="{{ url_for('auth.logout') }}">Logout</a>
+        </span>
+    </nav>
+
+    <h1>My Watchlist</h1>
+
+    {% if titles %}
+        <div class="title-list">
+            {% for t in titles %}
+                <div class="title-card">
+                    <h3>{{ t.title }}</h3>
+                    <p>{{ t.type }} | {{ t.status }}{% if t.year %} | {{ t.year }}{% endif %}</p>
+                    {% if t.genre %}<p>Genre: {{ t.genre }}</p>{% endif %}
+                    {% if t.rating %}<p>Rating: {{ t.rating }}/5</p>{% endif %}
+                    {% if t.notes %}<p>{{ t.notes }}</p>{% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Your watchlist is empty. <a href="{{ url_for('watchlist.add_title') }}">Add your first title</a>.</p>
+    {% endif %}
+</div>
+{% endblock %}
