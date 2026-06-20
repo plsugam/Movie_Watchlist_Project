@@ -1,7 +1,7 @@
 import pymysql
 from app import config
- 
- 
+
+
 def get_connection():
     try:
         conn = pymysql.connect(
@@ -15,8 +15,8 @@ def get_connection():
     except Exception as e:
         print("Database connection failed:")
         print(e)
- 
- 
+
+
 def create_tables():
     conn = get_connection()
     cursor = conn.cursor()
@@ -28,6 +28,21 @@ def create_tables():
             password VARCHAR(255) NOT NULL,
             role VARCHAR(20) NOT NULL DEFAULT 'user',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS watchlist (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            title VARCHAR(200) NOT NULL,
+            type VARCHAR(20) NOT NULL,
+            status VARCHAR(30) NOT NULL DEFAULT 'plan',
+            genre VARCHAR(50),
+            year INT,
+            rating INT,
+            notes TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )
     """)
     conn.commit()
