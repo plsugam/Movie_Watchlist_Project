@@ -21,6 +21,12 @@
                     {% if t.genre %}<p>Genre: {{ t.genre }}</p>{% endif %}
                     {% if t.rating %}<p>Rating: {{ t.rating }}/5</p>{% endif %}
                     {% if t.notes %}<p>{{ t.notes }}</p>{% endif %}
+                    <div class="card-actions">
+                        <a href="{{ url_for('watchlist.edit_title', id=t.id) }}">Edit</a>
+                        <form method="POST" action="{{ url_for('watchlist.delete_title', id=t.id) }}" onsubmit="return confirm('Remove this title from your watchlist?');">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
                 </div>
             {% endfor %}
         </div>
