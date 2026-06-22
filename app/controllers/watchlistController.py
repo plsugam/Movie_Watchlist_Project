@@ -56,3 +56,81 @@ def add_title():
         return redirect(url_for("watchlist.view_watchlist"))
 
     return render_template("add.html")
+
+
+def edit_title(id):
+    user_id = session["user_id"]
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM watchlist WHERE id = %s AND user_id = %s",
+        (id, user_id)
+    )
+    entry = cursor.fetchone()
+
+    if not entry:
+        flash("Title not found.", "danger")
+        cursor.close()
+        conn.close()
+        return redirect(url_for("watchlist.view_watchlist"))
+
+    if request.method == "POST":
+        title = request.form.get("title", "").strip()
+        type_ = request.form.get("type", "").strip()
+        status = request.form.get("status", "plan").strip()
+        genre = request.form.get("genre", "").strip()
+        year = request.form.get("year", "").strip()
+        rating = request.form.get("rating", "").strip()
+        notes = request.form.get("notes", "").strip()
+
+        if not title or not type_:
+            flash("Title and type are required.", "danger")
+            cursor.close()
+            conn.close()
+            return render_template("edit.html", entry=entry)
+
+        cursor.execute(
+            """
+            UPDATE watchlist
+            SET title=%s, type=%s, status=%s, genre=%s, year=%s, rating=%s, notes=%s
+            WHERE id=%s AND user_id=%s
+            """,
+            (
+                title,
+                type_,
+                status,
+                genre or None,
+                year or None,
+                rating or None,
+                notes or None,
+                id,
+                user_id,
+            ),
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+        flash("Title updated successfully!", "success")
+        return redirect(url_for("watchlist.view_watchlist"))
+
+    cursor.close()
+    conn.close()
+    return render_template("edit.html", entry=entry)
+
+
+def delete_title(id):
+    user_id = session["user_id"]
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM watchlist WHERE id = %s AND user_id = %s",
+        (id, user_id)
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    flash("Title removed from your watchlist.", "success")
+    return redirect(url_for("watchlist.view_watchlist"))

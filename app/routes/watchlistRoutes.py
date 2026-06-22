@@ -12,4 +12,10 @@ def register():
     bp.route("/watchlist/add", methods=["GET", "POST"])(
         login_required(watchlistController.add_title)
     )
+    bp.route("/watchlist/edit/<int:id>", methods=["GET", "POST"])(
+        login_required(watchlistController.edit_title)
+    )
+    bp.route("/watchlist/delete/<int:id>", methods=["GET", "POST"])(
+        login_required(watchlistController.delete_title)
+    )
     return bp
