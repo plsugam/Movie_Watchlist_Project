@@ -2,12 +2,14 @@
 {% block title %}My Watchlist - Reellog{% endblock %}
 {% block content %}
 <div class="watchlist-wrapper">
-    <nav>
+    <nav class="topnav">
         <span class="logo">Reellog</span>
-        <span>
-            <a href="{{ url_for('watchlist.add_title') }}">+ Add Title</a> |
-            Hi, {{ session.user_name }} | <a href="{{ url_for('auth.logout') }}">Logout</a>
-        </span>
+        <div class="nav-links">
+            <a href="{{ url_for('watchlist.dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('watchlist.view_watchlist') }}" class="active">Watchlist</a>
+            <a href="{{ url_for('watchlist.add_title') }}">+ Add</a>
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        </div>
     </nav>
 
     <h1>My Watchlist</h1>

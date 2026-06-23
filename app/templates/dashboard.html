@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Reellog{% endblock %}
+{% block content %}
+<div class="page-wrapper">
+
+    <nav class="topnav">
+        <span class="logo">Reellog</span>
+        <div class="nav-links">
+            <a href="{{ url_for('watchlist.dashboard') }}" class="active">Dashboard</a>
+            <a href="{{ url_for('watchlist.view_watchlist') }}">Watchlist</a>
+            <a href="{{ url_for('watchlist.add_title') }}">+ Add</a>
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="page-header">
+            <h1>Welcome back, {{ session.user_name }}</h1>
+            <p class="subtext">Here's an overview of your watchlist.</p>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-num">{{ total }}</div>
+                <div class="stat-label">Total Titles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">{{ status_counts.get('watching', 0) }}</div>
+                <div class="stat-label">Watching</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">{{ status_counts.get('completed', 0) }}</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">{{ status_counts.get('plan', 0) }}</div>
+                <div class="stat-label">Plan to Watch</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num">{{ status_counts.get('dropped', 0) }}</div>
+                <div class="stat-label">Dropped</div>
+            </div>
+        </div>
+
+        <!-- Type Breakdown -->
+        <div class="section">
+            <h2>By Type</h2>
+            <div class="type-grid">
+                <div class="type-card">
+                    <div class="type-num">{{ type_counts.get('movie', 0) }}</div>
+                    <div class="type-label">Movies</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-num">{{ type_counts.get('series', 0) }}</div>
+                    <div class="type-label">Series</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-num">{{ type_counts.get('anime', 0) }}</div>
+                    <div class="type-label">Anime</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recently Added -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Recently Added</h2>
+                <a href="{{ url_for('watchlist.view_watchlist') }}">View all →</a>
+            </div>
+
+            {% if recent %}
+            <div class="recent-list">
+                {% for t in recent %}
+                <div class="recent-item">
+                    <div class="recent-info">
+                        <span class="recent-title">{{ t.title }}</span>
+                        <span class="recent-meta">{{ t.type }}{% if t.year %} · {{ t.year }}{% endif %}{% if t.genre %} · {{ t.genre }}{% endif %}</span>
+                    </div>
+                    <div class="recent-right">
+                        <span class="status-badge status-{{ t.status }}">{{ t.status.replace('plan', 'plan to watch') }}</span>
+                        {% if t.rating %}
+                        <span class="recent-rating">{{ t.rating }}/5</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="empty-msg">No titles yet. <a href="{{ url_for('watchlist.add_title') }}">Add your first one</a>.</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
