@@ -2,6 +2,52 @@ from flask import render_template, request, redirect, url_for, session, flash
 from app.database import get_connection
 
 
+def dashboard():
+    user_id = session["user_id"]
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Total titles
+    cursor.execute("SELECT COUNT(*) as total FROM watchlist WHERE user_id = %s", (user_id,))
+    total = cursor.fetchone()["total"]
+
+    # Count by status
+    cursor.execute("""
+        SELECT status, COUNT(*) as count
+        FROM watchlist WHERE user_id = %s
+        GROUP BY status
+    """, (user_id,))
+    status_rows = cursor.fetchall()
+    status_counts = {row["status"]: row["count"] for row in status_rows}
+
+    # Count by type
+    cursor.execute("""
+        SELECT type, COUNT(*) as count
+        FROM watchlist WHERE user_id = %s
+        GROUP BY type
+    """, (user_id,))
+    type_rows = cursor.fetchall()
+    type_counts = {row["type"]: row["count"] for row in type_rows}
+
+    # Recent titles (last 5)
+    cursor.execute("""
+        SELECT * FROM watchlist WHERE user_id = %s
+        ORDER BY created_at DESC LIMIT 5
+    """, (user_id,))
+    recent = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "dashboard.html",
+        total=total,
+        status_counts=status_counts,
+        type_counts=type_counts,
+        recent=recent,
+    )
+
+
 def view_watchlist():
     user_id = session["user_id"]
     conn = get_connection()

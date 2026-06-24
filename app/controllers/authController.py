@@ -4,7 +4,7 @@ from app.database import get_connection
 
 
 def home():
-    return render_template("home.html")
+    return redirect(url_for("watchlist.dashboard"))
 
 
 def login():

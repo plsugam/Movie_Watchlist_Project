@@ -6,6 +6,9 @@ bp = Blueprint("watchlist", __name__)
 
 
 def register():
+    bp.route("/dashboard", methods=["GET"])(
+        login_required(watchlistController.dashboard)
+    )
     bp.route("/watchlist", methods=["GET"])(
         login_required(watchlistController.view_watchlist)
     )
