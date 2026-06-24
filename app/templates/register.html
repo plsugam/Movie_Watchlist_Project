@@ -1,14 +1,76 @@
 {% extends "base.html" %}
 {% block title %}Register - Reellog{% endblock %}
+
 {% block content %}
-<div class="auth-wrapper">
-    <h1>Create an account</h1>
-    <form method="POST">
-        <input type="text" name="name" placeholder="Full Name" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Register</button>
-    </form>
-    <p>Already have an account? <a href="{{ url_for('auth.login') }}">Log In</a></p>
+<div class="auth-split">
+
+    <!-- LEFT PANEL: Carousel (same as login) -->
+    <div class="carousel-panel" id="carouselPanel">
+        <div class="carousel-slides">
+            {% set slides = [
+                {"title": "Breaking Bad", "year": "2008", "type": "Series", "genre": "Crime Drama", "color": "#d47c0f"},
+                {"title": "Interstellar", "year": "2014", "type": "Movie", "genre": "Sci-Fi", "color": "#4a90b8"},
+                {"title": "Peaky Blinders", "year": "2013", "type": "Series", "genre": "Crime Drama", "color": "#9b2335"},
+                {"title": "Dune", "year": "2021", "type": "Movie", "genre": "Sci-Fi Epic", "color": "#c8963e"},
+                {"title": "Dark", "year": "2017", "type": "Series", "genre": "Psychological Thriller", "color": "#3d7a6e"},
+                {"title": "Oppenheimer", "year": "2023", "type": "Movie", "genre": "Historical Drama", "color": "#c4622d"}
+            ] %}
+            {% for slide in slides %}
+            <div class="carousel-slide {% if loop.first %}active{% endif %}" data-color="{{ slide.color }}">
+                <div class="slide-bg" style="background: radial-gradient(ellipse at 30% 60%, {{ slide.color }}22 0%, transparent 70%);"></div>
+                <div class="slide-content">
+                    <div class="slide-tag">{{ slide.type }} · {{ slide.year }}</div>
+                    <h2 class="slide-title">{{ slide.title }}</h2>
+                    <p class="slide-genre">{{ slide.genre }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="carousel-indicators">
+            {% for slide in slides %}
+            <div class="indicator {% if loop.first %}active{% endif %}" data-index="{{ loop.index0 }}"></div>
+            {% endfor %}
+        </div>
+
+        <div class="carousel-brand">
+            <span class="brand-logo">Reellog</span>
+            <span class="brand-tag">Track everything you watch.</span>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="form-panel">
+        <div class="form-inner">
+            <h1 class="form-title">Create an account</h1>
+            <p class="form-sub">Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" class="auth-form">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" placeholder="Your name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Min. 6 characters" required>
+                </div>
+                <button type="submit" class="submit-btn" id="submitBtn">Create Account</button>
+            </form>
+        </div>
+    </div>
+
 </div>
+<script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
 {% endblock %}
