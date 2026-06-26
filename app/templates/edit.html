@@ -1,31 +1,92 @@
 {% extends "base.html" %}
 {% block title %}Edit Title - Reellog{% endblock %}
 {% block content %}
-<div class="auth-wrapper">
-    <h1>Edit Title</h1>
-    <form method="POST">
-        <input type="text" name="title" placeholder="Title" value="{{ entry.title }}" required>
+<div class="page-wrapper">
 
-        <select name="type" required>
-            <option value="movie" {% if entry.type == 'movie' %}selected{% endif %}>Movie</option>
-            <option value="series" {% if entry.type == 'series' %}selected{% endif %}>Series</option>
-            <option value="anime" {% if entry.type == 'anime' %}selected{% endif %}>Anime</option>
-        </select>
+    <nav class="topnav">
+        <span class="logo">Reellog</span>
+        <div class="nav-links">
+            <a href="{{ url_for('watchlist.dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('watchlist.view_watchlist') }}" class="active">Watchlist</a>
+            <a href="{{ url_for('watchlist.add_title') }}">+ Add</a>
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        </div>
+    </nav>
 
-        <select name="status">
-            <option value="plan" {% if entry.status == 'plan' %}selected{% endif %}>Plan to Watch</option>
-            <option value="watching" {% if entry.status == 'watching' %}selected{% endif %}>Watching</option>
-            <option value="completed" {% if entry.status == 'completed' %}selected{% endif %}>Completed</option>
-            <option value="dropped" {% if entry.status == 'dropped' %}selected{% endif %}>Dropped</option>
-        </select>
+    <div class="page-content">
+        <div class="page-header">
+            <h1>Edit Title</h1>
+            <a href="{{ url_for('watchlist.view_watchlist') }}" class="btn-ghost">← Back</a>
+        </div>
 
-        <input type="text" name="genre" placeholder="Genre (optional)" value="{{ entry.genre or '' }}">
-        <input type="number" name="year" placeholder="Year (optional)" value="{{ entry.year or '' }}">
-        <input type="number" name="rating" min="1" max="5" placeholder="Rating 1-5 (optional)" value="{{ entry.rating or '' }}">
-        <textarea name="notes" placeholder="Notes (optional)">{{ entry.notes or '' }}</textarea>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-        <button type="submit">Save Changes</button>
-    </form>
-    <p><a href="{{ url_for('watchlist.view_watchlist') }}">Back to watchlist</a></p>
+        <div class="form-card">
+            <form method="POST" class="inner-form">
+                <div class="field-row">
+                    <div class="field-group full">
+                        <label>Title <span class="req">*</span></label>
+                        <input type="text" name="title" value="{{ entry.title }}" required>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label>Type <span class="req">*</span></label>
+                        <select name="type" required>
+                            <option value="movie" {% if entry.type == 'movie' %}selected{% endif %}>Movie</option>
+                            <option value="series" {% if entry.type == 'series' %}selected{% endif %}>Series</option>
+                            <option value="anime" {% if entry.type == 'anime' %}selected{% endif %}>Anime</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label>Status</label>
+                        <select name="status">
+                            <option value="plan" {% if entry.status == 'plan' %}selected{% endif %}>Plan to Watch</option>
+                            <option value="watching" {% if entry.status == 'watching' %}selected{% endif %}>Watching</option>
+                            <option value="completed" {% if entry.status == 'completed' %}selected{% endif %}>Completed</option>
+                            <option value="dropped" {% if entry.status == 'dropped' %}selected{% endif %}>Dropped</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label>Genre</label>
+                        <input type="text" name="genre" value="{{ entry.genre or '' }}" placeholder="e.g. Sci-Fi">
+                    </div>
+                    <div class="field-group">
+                        <label>Year</label>
+                        <input type="number" name="year" value="{{ entry.year or '' }}" placeholder="e.g. 2023" min="1900" max="2030">
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label>Rating <span class="muted">(1–5)</span></label>
+                        <input type="number" name="rating" value="{{ entry.rating or '' }}" placeholder="e.g. 4" min="1" max="5">
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group full">
+                        <label>Notes</label>
+                        <textarea name="notes" placeholder="Your thoughts…">{{ entry.notes or '' }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                    <a href="{{ url_for('watchlist.view_watchlist') }}" class="btn-ghost">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -1,32 +1,93 @@
 {% extends "base.html" %}
 {% block title %}Add Title - Reellog{% endblock %}
 {% block content %}
-<div class="auth-wrapper">
-    <h1>Add a Title</h1>
-    <form method="POST">
-        <input type="text" name="title" placeholder="Title" required>
+<div class="page-wrapper">
 
-        <select name="type" required>
-            <option value="">Select Type</option>
-            <option value="movie">Movie</option>
-            <option value="series">Series</option>
-            <option value="anime">Anime</option>
-        </select>
+    <nav class="topnav">
+        <span class="logo">Reellog</span>
+        <div class="nav-links">
+            <a href="{{ url_for('watchlist.dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('watchlist.view_watchlist') }}">Watchlist</a>
+            <a href="{{ url_for('watchlist.add_title') }}" class="active">+ Add</a>
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        </div>
+    </nav>
 
-        <select name="status">
-            <option value="plan">Plan to Watch</option>
-            <option value="watching">Watching</option>
-            <option value="completed">Completed</option>
-            <option value="dropped">Dropped</option>
-        </select>
+    <div class="page-content">
+        <div class="page-header">
+            <h1>Add a Title</h1>
+            <a href="{{ url_for('watchlist.view_watchlist') }}" class="btn-ghost">← Back</a>
+        </div>
 
-        <input type="text" name="genre" placeholder="Genre (optional)">
-        <input type="number" name="year" placeholder="Year (optional)">
-        <input type="number" name="rating" min="1" max="5" placeholder="Rating 1-5 (optional)">
-        <textarea name="notes" placeholder="Notes (optional)"></textarea>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-        <button type="submit">Add to Watchlist</button>
-    </form>
-    <p><a href="{{ url_for('watchlist.view_watchlist') }}">Back to watchlist</a></p>
+        <div class="form-card">
+            <form method="POST" class="inner-form">
+                <div class="field-row">
+                    <div class="field-group full">
+                        <label>Title <span class="req">*</span></label>
+                        <input type="text" name="title" placeholder="e.g. Inception" required>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label>Type <span class="req">*</span></label>
+                        <select name="type" required>
+                            <option value="">Select type</option>
+                            <option value="movie">Movie</option>
+                            <option value="series">Series</option>
+                            <option value="anime">Anime</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label>Status</label>
+                        <select name="status">
+                            <option value="plan">Plan to Watch</option>
+                            <option value="watching">Watching</option>
+                            <option value="completed">Completed</option>
+                            <option value="dropped">Dropped</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label>Genre</label>
+                        <input type="text" name="genre" placeholder="e.g. Sci-Fi">
+                    </div>
+                    <div class="field-group">
+                        <label>Year</label>
+                        <input type="number" name="year" placeholder="e.g. 2023" min="1900" max="2030">
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label>Rating <span class="muted">(1–5)</span></label>
+                        <input type="number" name="rating" placeholder="e.g. 4" min="1" max="5">
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group full">
+                        <label>Notes</label>
+                        <textarea name="notes" placeholder="Your thoughts, quotes, recommendations…"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Add to Watchlist</button>
+                    <a href="{{ url_for('watchlist.view_watchlist') }}" class="btn-ghost">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -1,7 +1,8 @@
 {% extends "base.html" %}
-{% block title %}My Watchlist - Reellog{% endblock %}
+{% block title %}Watchlist - Reellog{% endblock %}
 {% block content %}
-<div class="watchlist-wrapper">
+<div class="page-wrapper">
+
     <nav class="topnav">
         <span class="logo">Reellog</span>
         <div class="nav-links">
@@ -12,28 +13,76 @@
         </div>
     </nav>
 
-    <h1>My Watchlist</h1>
+    <div class="page-content">
 
-    {% if titles %}
-        <div class="title-list">
+        <div class="page-header">
+            <h1>My Watchlist</h1>
+            <a href="{{ url_for('watchlist.add_title') }}" class="btn-primary">+ Add Title</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if titles %}
+        <div class="watchlist-grid">
             {% for t in titles %}
-                <div class="title-card">
-                    <h3>{{ t.title }}</h3>
-                    <p>{{ t.type }} | {{ t.status }}{% if t.year %} | {{ t.year }}{% endif %}</p>
-                    {% if t.genre %}<p>Genre: {{ t.genre }}</p>{% endif %}
-                    {% if t.rating %}<p>Rating: {{ t.rating }}/5</p>{% endif %}
-                    {% if t.notes %}<p>{{ t.notes }}</p>{% endif %}
-                    <div class="card-actions">
-                        <a href="{{ url_for('watchlist.edit_title', id=t.id) }}">Edit</a>
-                        <form method="POST" action="{{ url_for('watchlist.delete_title', id=t.id) }}" onsubmit="return confirm('Remove this title from your watchlist?');">
-                            <button type="submit">Delete</button>
-                        </form>
+            <div class="wl-card">
+                <div class="wl-card-top">
+                    <div>
+                        <div class="wl-type-badge type-{{ t.type }}">{{ t.type }}</div>
+                        <h3 class="wl-title">{{ t.title }}</h3>
+                        <div class="wl-meta">
+                            {% if t.year %}{{ t.year }}{% endif %}
+                            {% if t.year and t.genre %} · {% endif %}
+                            {% if t.genre %}{{ t.genre }}{% endif %}
+                        </div>
                     </div>
+                    <span class="status-badge status-{{ t.status }}">
+                        {% if t.status == 'plan' %}Plan to Watch
+                        {% elif t.status == 'watching' %}Watching
+                        {% elif t.status == 'completed' %}Completed
+                        {% elif t.status == 'dropped' %}Dropped
+                        {% endif %}
+                    </span>
                 </div>
+
+                {% if t.rating %}
+                <div class="wl-rating">
+                    {% for i in range(1, 6) %}
+                        <span class="star {% if i <= t.rating %}filled{% endif %}">★</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if t.notes %}
+                <p class="wl-notes">{{ t.notes }}</p>
+                {% endif %}
+
+                <div class="wl-actions">
+                    <a href="{{ url_for('watchlist.edit_title', id=t.id) }}" class="btn-edit">Edit</a>
+                    <form method="POST" action="{{ url_for('watchlist.delete_title', id=t.id) }}"
+                          onsubmit="return confirm('Remove {{ t.title }} from your watchlist?');">
+                        <button type="submit" class="btn-delete">Delete</button>
+                    </form>
+                </div>
+            </div>
             {% endfor %}
         </div>
-    {% else %}
-        <p>Your watchlist is empty. <a href="{{ url_for('watchlist.add_title') }}">Add your first title</a>.</p>
-    {% endif %}
+
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">◎</div>
+            <h3>Your watchlist is empty</h3>
+            <p>Start tracking movies, series, and anime.</p>
+            <a href="{{ url_for('watchlist.add_title') }}" class="btn-primary">Add your first title</a>
+        </div>
+        {% endif %}
+
+    </div>
 </div>
 {% endblock %}
