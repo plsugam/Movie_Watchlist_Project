@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.database import get_connection
+import re
 
 
 def home():
@@ -9,7 +10,7 @@ def home():
 
 def login():
     if session.get("user_id"):
-        return redirect(url_for("auth.home"))
+        return redirect(url_for("watchlist.dashboard"))
 
     if request.method == "POST":
         email = request.form.get("email", "").strip()
@@ -17,6 +18,10 @@ def login():
 
         if not email or not password:
             flash("Email and password are required.", "danger")
+            return render_template("login.html")
+
+        if len(email) > 150:
+            flash("Invalid email address.", "danger")
             return render_template("login.html")
 
         conn = get_connection()
@@ -30,7 +35,7 @@ def login():
             session["user_id"] = user["id"]
             session["user_name"] = user["name"]
             flash("Login successful!", "success")
-            return redirect(url_for("auth.home"))
+            return redirect(url_for("watchlist.dashboard"))
         else:
             flash("Invalid email or password.", "danger")
 
@@ -39,7 +44,7 @@ def login():
 
 def register():
     if session.get("user_id"):
-        return redirect(url_for("auth.home"))
+        return redirect(url_for("watchlist.dashboard"))
 
     if request.method == "POST":
         name = request.form.get("name", "").strip()
@@ -52,8 +57,17 @@ def register():
         if len(name) > 100:
             flash("Name must be under 100 characters.", "danger")
             return render_template("register.html")
+        if len(email) > 150:
+            flash("Email must be under 150 characters.", "danger")
+            return render_template("register.html")
+        if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
+            flash("Please enter a valid email address.", "danger")
+            return render_template("register.html")
         if len(password) < 6:
             flash("Password must be at least 6 characters.", "danger")
+            return render_template("register.html")
+        if len(password) > 200:
+            flash("Password is too long.", "danger")
             return render_template("register.html")
 
         conn = get_connection()
