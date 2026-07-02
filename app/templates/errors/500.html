@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}500 - Server Error{% endblock %}
+{% block content %}
+<div class="error-page">
+    <div class="error-code">500</div>
+    <h1 class="error-title">Something went wrong</h1>
+    <p class="error-msg">An internal server error occurred. Please try again later.</p>
+    <a href="{{ url_for('watchlist.dashboard') }}" class="btn-primary">Go to Dashboard</a>
+</div>
+{% endblock %}

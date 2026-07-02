@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}404 - Page Not Found{% endblock %}
+{% block content %}
+<div class="error-page">
+    <div class="error-code">404</div>
+    <h1 class="error-title">Page not found</h1>
+    <p class="error-msg">The page you're looking for doesn't exist or has been moved.</p>
+    <a href="{{ url_for('watchlist.dashboard') }}" class="btn-primary">Go to Dashboard</a>
+</div>
+{% endblock %}
