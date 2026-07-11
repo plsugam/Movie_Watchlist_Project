@@ -47,16 +47,49 @@ def dashboard():
 
 def view_watchlist():
     user_id = session["user_id"]
+
+    search = request.args.get("search", "").strip()
+    filter_type = request.args.get("type", "")
+    filter_status = request.args.get("status", "")
+    sort = request.args.get("sort", "newest")
+
+    query = "SELECT * FROM watchlist WHERE user_id = %s"
+    params = [user_id]
+
+    if search:
+        query += " AND title LIKE %s"
+        params.append(f"%{search}%")
+    if filter_type and filter_type in VALID_TYPES:
+        query += " AND type = %s"
+        params.append(filter_type)
+    if filter_status and filter_status in VALID_STATUSES:
+        query += " AND status = %s"
+        params.append(filter_status)
+
+    if sort == "oldest":
+        query += " ORDER BY created_at ASC"
+    elif sort == "title":
+        query += " ORDER BY title ASC"
+    elif sort == "rating":
+        query += " ORDER BY rating DESC"
+    else:
+        query += " ORDER BY created_at DESC"
+
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute(
-        "SELECT * FROM watchlist WHERE user_id = %s ORDER BY created_at DESC",
-        (user_id,)
-    )
+    cursor.execute(query, params)
     titles = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template("watchlist.html", titles=titles)
+
+    return render_template(
+        "watchlist.html",
+        titles=titles,
+        search=search,
+        filter_type=filter_type,
+        filter_status=filter_status,
+        sort=sort,
+    )
 
 
 def add_title():
@@ -185,7 +218,7 @@ def edit_title(id):
                 if rating < 1 or rating > 5:
                     raise ValueError
             except ValueError:
-                flash("Rating must be a number between 1 and 5.", "danger")
+                flash("Rating must be between 1 and 5.", "danger")
                 cursor.close()
                 conn.close()
                 return render_template("edit.html", entry=entry)
