@@ -53,14 +53,15 @@
                 {% endif %}
             {% endwith %}
 
-            <form method="POST" class="auth-form">
+            <form method="POST" class="auth-form" id="login-form">
+                <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="email" placeholder="you@example.com" required>
+                    <input type="email" name="email" id="email" placeholder="you@example.com" required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" name="password" placeholder="••••••••" required>
+                    <input type="password" name="password" id="password" placeholder="••••••••" required>
                 </div>
                 <button type="submit" class="submit-btn" id="submitBtn">Log In</button>
             </form>
