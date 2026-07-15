@@ -4,7 +4,7 @@
 {% block content %}
 <div class="auth-split">
 
-    <!-- LEFT PANEL: Carousel (same as login) -->
+    <!-- LEFT PANEL: Carousel -->
     <div class="carousel-panel" id="carouselPanel">
         <div class="carousel-slides">
             {% set slides = [
@@ -53,18 +53,19 @@
                 {% endif %}
             {% endwith %}
 
-            <form method="POST" class="auth-form">
+            <form method="POST" class="auth-form" id="register-form">
+                <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
                 <div class="form-group">
                     <label>Full Name</label>
-                    <input type="text" name="name" placeholder="Your name" required>
+                    <input type="text" name="name" id="name" placeholder="Your name" required>
                 </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="email" placeholder="you@example.com" required>
+                    <input type="email" name="email" id="email" placeholder="you@example.com" required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" name="password" placeholder="Min. 6 characters" required>
+                    <input type="password" name="password" id="password" placeholder="Min. 6 characters" required>
                 </div>
                 <button type="submit" class="submit-btn" id="submitBtn">Create Account</button>
             </form>
