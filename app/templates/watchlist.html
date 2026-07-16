@@ -28,15 +28,8 @@
             {% endif %}
         {% endwith %}
 
-        <!-- Search and Filter Bar -->
         <form class="filter-bar" method="GET" action="{{ url_for('watchlist.view_watchlist') }}">
-            <input
-                type="text"
-                name="search"
-                placeholder="Search titles…"
-                value="{{ search }}"
-                class="filter-search"
-            >
+            <input type="text" name="search" placeholder="Search titles..." value="{{ search }}" class="filter-search">
             <select name="type" class="filter-select">
                 <option value="">All Types</option>
                 <option value="movie" {% if filter_type == 'movie' %}selected{% endif %}>Movie</option>
@@ -53,7 +46,7 @@
             <select name="sort" class="filter-select">
                 <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest First</option>
                 <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest First</option>
-                <option value="title" {% if sort == 'title' %}selected{% endif %}>A–Z</option>
+                <option value="title" {% if sort == 'title' %}selected{% endif %}>A-Z</option>
                 <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Top Rated</option>
             </select>
             <button type="submit" class="btn-ghost">Filter</button>
@@ -100,7 +93,8 @@
                 <div class="wl-actions">
                     <a href="{{ url_for('watchlist.edit_title', id=t.id) }}" class="btn-edit">Edit</a>
                     <form method="POST" action="{{ url_for('watchlist.delete_title', id=t.id) }}"
-                          onsubmit="return confirm('Remove {{ t.title }} from your watchlist?');">
+                          onsubmit="return confirm('Remove this title from your watchlist?');">
+                        <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
                         <button type="submit" class="btn-delete">Delete</button>
                     </form>
                 </div>
@@ -110,7 +104,7 @@
 
         {% else %}
         <div class="empty-state">
-            <div class="empty-icon">◎</div>
+            <div class="empty-icon">&#9711;</div>
             {% if search or filter_type or filter_status %}
             <h3>No results found</h3>
             <p>Try adjusting your search or filters.</p>
