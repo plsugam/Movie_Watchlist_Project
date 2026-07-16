@@ -29,6 +29,8 @@
 
         <div class="form-card">
             <form method="POST" class="inner-form">
+                <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
+
                 <div class="field-row">
                     <div class="field-group full">
                         <label>Title <span class="req">*</span></label>
