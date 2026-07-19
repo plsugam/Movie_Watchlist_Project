@@ -28,29 +28,31 @@
         {% endwith %}
 
         <div class="form-card">
-            <form method="POST" class="inner-form">
+            <form method="POST" class="inner-form" id="add-form">
                 <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
 
                 <div class="field-row">
                     <div class="field-group full">
                         <label>Title <span class="req">*</span></label>
-                        <input type="text" name="title" placeholder="e.g. Inception" required>
+                        <input type="text" name="title" id="title" placeholder="e.g. Inception">
+                        <span class="error-msg" id="title-error"></span>
                     </div>
                 </div>
 
                 <div class="field-row">
                     <div class="field-group">
                         <label>Type <span class="req">*</span></label>
-                        <select name="type" required>
+                        <select name="type" id="type">
                             <option value="">Select type</option>
                             <option value="movie">Movie</option>
                             <option value="series">Series</option>
                             <option value="anime">Anime</option>
                         </select>
+                        <span class="error-msg" id="type-error"></span>
                     </div>
                     <div class="field-group">
                         <label>Status</label>
-                        <select name="status">
+                        <select name="status" id="status">
                             <option value="plan">Plan to Watch</option>
                             <option value="watching">Watching</option>
                             <option value="completed">Completed</option>
@@ -62,25 +64,27 @@
                 <div class="field-row">
                     <div class="field-group">
                         <label>Genre</label>
-                        <input type="text" name="genre" placeholder="e.g. Sci-Fi">
+                        <input type="text" name="genre" id="genre" placeholder="e.g. Sci-Fi">
                     </div>
                     <div class="field-group">
                         <label>Year</label>
-                        <input type="number" name="year" placeholder="e.g. 2023" min="1900" max="2030">
+                        <input type="number" name="year" id="year" placeholder="e.g. 2023" min="1900" max="2030">
+                        <span class="error-msg" id="year-error"></span>
                     </div>
                 </div>
 
                 <div class="field-row">
                     <div class="field-group">
                         <label>Rating <span class="muted">(1–5)</span></label>
-                        <input type="number" name="rating" placeholder="e.g. 4" min="1" max="5">
+                        <input type="number" name="rating" id="rating" placeholder="e.g. 4" min="1" max="5">
+                        <span class="error-msg" id="rating-error"></span>
                     </div>
                 </div>
 
                 <div class="field-row">
                     <div class="field-group full">
                         <label>Notes</label>
-                        <textarea name="notes" placeholder="Your thoughts, quotes, recommendations…"></textarea>
+                        <textarea name="notes" id="notes" placeholder="Your thoughts, quotes, recommendations..."></textarea>
                     </div>
                 </div>
 
@@ -92,4 +96,5 @@
         </div>
     </div>
 </div>
+<script src="{{ url_for('static', filename='js/validation.js') }}"></script>
 {% endblock %}
