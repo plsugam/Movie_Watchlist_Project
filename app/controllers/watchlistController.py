@@ -1,5 +1,6 @@
 from flask import render_template, request, redirect, url_for, session, flash
 from app.database import get_connection
+from app.repository import watchlist_repo
 
 VALID_TYPES = {"movie", "series", "anime"}
 VALID_STATUSES = {"plan", "watching", "completed", "dropped"}
@@ -7,34 +8,11 @@ VALID_STATUSES = {"plan", "watching", "completed", "dropped"}
 
 def dashboard():
     user_id = session["user_id"]
-    conn = get_connection()
-    cursor = conn.cursor()
 
-    cursor.execute("SELECT COUNT(*) as total FROM watchlist WHERE user_id = %s", (user_id,))
-    total = cursor.fetchone()["total"]
-
-    cursor.execute("""
-        SELECT status, COUNT(*) as count
-        FROM watchlist WHERE user_id = %s
-        GROUP BY status
-    """, (user_id,))
-    status_counts = {row["status"]: row["count"] for row in cursor.fetchall()}
-
-    cursor.execute("""
-        SELECT type, COUNT(*) as count
-        FROM watchlist WHERE user_id = %s
-        GROUP BY type
-    """, (user_id,))
-    type_counts = {row["type"]: row["count"] for row in cursor.fetchall()}
-
-    cursor.execute("""
-        SELECT * FROM watchlist WHERE user_id = %s
-        ORDER BY created_at DESC LIMIT 5
-    """, (user_id,))
-    recent = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
+    total = watchlist_repo.get_count_by_user(user_id)
+    status_counts = watchlist_repo.get_status_counts(user_id)
+    type_counts = watchlist_repo.get_type_counts(user_id)
+    recent = watchlist_repo.get_recent(user_id)
 
     return render_template(
         "dashboard.html",
@@ -158,19 +136,10 @@ def add_title():
 
 def edit_title(id):
     user_id = session["user_id"]
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "SELECT * FROM watchlist WHERE id = %s AND user_id = %s",
-        (id, user_id)
-    )
-    entry = cursor.fetchone()
+    entry = watchlist_repo.get_by_id(id, user_id)
 
     if not entry:
         flash("Title not found.", "danger")
-        cursor.close()
-        conn.close()
         return redirect(url_for("watchlist.view_watchlist"))
 
     if request.method == "POST":
@@ -184,23 +153,15 @@ def edit_title(id):
 
         if not title or not type_:
             flash("Title and type are required.", "danger")
-            cursor.close()
-            conn.close()
             return render_template("edit.html", entry=entry)
         if len(title) > 200:
             flash("Title must be under 200 characters.", "danger")
-            cursor.close()
-            conn.close()
             return render_template("edit.html", entry=entry)
         if type_ not in VALID_TYPES:
             flash("Invalid type selected.", "danger")
-            cursor.close()
-            conn.close()
             return render_template("edit.html", entry=entry)
         if status not in VALID_STATUSES:
             flash("Invalid status selected.", "danger")
-            cursor.close()
-            conn.close()
             return render_template("edit.html", entry=entry)
         if year:
             try:
@@ -209,8 +170,6 @@ def edit_title(id):
                     raise ValueError
             except ValueError:
                 flash("Please enter a valid year between 1900 and 2030.", "danger")
-                cursor.close()
-                conn.close()
                 return render_template("edit.html", entry=entry)
         if rating:
             try:
@@ -219,10 +178,10 @@ def edit_title(id):
                     raise ValueError
             except ValueError:
                 flash("Rating must be between 1 and 5.", "danger")
-                cursor.close()
-                conn.close()
                 return render_template("edit.html", entry=entry)
 
+        conn = get_connection()
+        cursor = conn.cursor()
         cursor.execute(
             """
             UPDATE watchlist
@@ -241,8 +200,6 @@ def edit_title(id):
         flash("Title updated successfully!", "success")
         return redirect(url_for("watchlist.view_watchlist"))
 
-    cursor.close()
-    conn.close()
     return render_template("edit.html", entry=entry)
 
 
