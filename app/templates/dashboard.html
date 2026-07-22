@@ -9,21 +9,35 @@
             <a href="{{ url_for('watchlist.dashboard') }}" class="active">Dashboard</a>
             <a href="{{ url_for('watchlist.view_watchlist') }}">Watchlist</a>
             <a href="{{ url_for('watchlist.add_title') }}">+ Add</a>
+            <span class="nav-user">{{ session.get('user_name') }}
+                {% if session.get('role') == 'admin' %}
+                <span class="admin-badge">Admin</span>
+                {% endif %}
+            </span>
             <a href="{{ url_for('auth.logout') }}">Logout</a>
         </div>
     </nav>
 
     <div class="page-content">
         <div class="page-header">
-            <h1>Welcome back, {{ session.user_name }}</h1>
-            <p class="subtext">Here's an overview of your watchlist.</p>
+            <div>
+                <h1>Welcome back, {{ session.user_name }}</h1>
+                <p class="subtext">Here's an overview of your watchlist.</p>
+            </div>
         </div>
 
-        <!-- Stats Row -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-num">{{ total }}</div>
-                <div class="stat-label">Total Titles</div>
+                <div class="stat-label">Total</div>
             </div>
             <div class="stat-card">
                 <div class="stat-num">{{ status_counts.get('watching', 0) }}</div>
@@ -43,7 +57,6 @@
             </div>
         </div>
 
-        <!-- Type Breakdown -->
         <div class="section">
             <h2>By Type</h2>
             <div class="type-grid">
@@ -62,7 +75,6 @@
             </div>
         </div>
 
-        <!-- Recently Added -->
         <div class="section">
             <div class="section-header">
                 <h2>Recently Added</h2>
@@ -78,7 +90,13 @@
                         <span class="recent-meta">{{ t.type }}{% if t.year %} · {{ t.year }}{% endif %}{% if t.genre %} · {{ t.genre }}{% endif %}</span>
                     </div>
                     <div class="recent-right">
-                        <span class="status-badge status-{{ t.status }}">{{ t.status.replace('plan', 'plan to watch') }}</span>
+                        <span class="status-badge status-{{ t.status }}">
+                            {% if t.status == 'plan' %}Plan to Watch
+                            {% elif t.status == 'watching' %}Watching
+                            {% elif t.status == 'completed' %}Completed
+                            {% elif t.status == 'dropped' %}Dropped
+                            {% endif %}
+                        </span>
                         {% if t.rating %}
                         <span class="recent-rating">{{ t.rating }}/5</span>
                         {% endif %}
@@ -91,6 +109,5 @@
             {% endif %}
         </div>
     </div>
-
 </div>
 {% endblock %}
