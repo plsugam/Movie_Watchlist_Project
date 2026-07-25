@@ -1,32 +1,11 @@
-import os
 import pytest
 from unittest.mock import patch, MagicMock
 from werkzeug.security import generate_password_hash
-from flask import Flask
-
-from app.routes import authRoutes
-
-PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
-TEMPLATE_DIR = os.path.join(PROJECT_ROOT, "app", "templates")
-STATIC_DIR = os.path.join(PROJECT_ROOT, "app", "static")
-
-
-@pytest.fixture(scope="module")
-def app():
-    app = Flask(
-        __name__,
-        template_folder=TEMPLATE_DIR,
-        static_folder=STATIC_DIR,
-    )
-    app.secret_key = "test-secret"
-    app.config["TESTING"] = True
-    app.register_blueprint(authRoutes.register())
-    return app
 
 
 @pytest.fixture
-def client(app):
-    with app.test_client() as client:
+def client(full_app):
+    with full_app.test_client() as client:
         yield client
 
 
@@ -38,16 +17,17 @@ def test_login_page_loads(client):
 
 
 def test_login_empty_fields(client):
+    with client.session_transaction() as sess:
+        sess["csrf_token"] = "test-token"
     response = client.post(
         "/login",
-        data={"email": "", "password": "", "csrf_token": "test"},
+        data={"email": "", "password": "", "csrf_token": "test-token"},
     )
     assert response.status_code == 200
 
 
 @patch("app.controllers.authController.get_connection")
 def test_login_success(mock_conn, client):
-    # Set up a fake CSRF token in session first
     with client.session_transaction() as sess:
         sess["csrf_token"] = "test-token"
 
@@ -141,7 +121,6 @@ def test_register_page_loads(client):
 def test_register_empty_fields(client):
     with client.session_transaction() as sess:
         sess["csrf_token"] = "test-token"
-
     response = client.post(
         "/register",
         data={"name": "", "email": "", "password": "", "csrf_token": "test-token"},
@@ -152,7 +131,6 @@ def test_register_empty_fields(client):
 def test_register_short_password(client):
     with client.session_transaction() as sess:
         sess["csrf_token"] = "test-token"
-
     response = client.post(
         "/register",
         data={

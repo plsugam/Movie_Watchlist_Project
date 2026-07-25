@@ -1,58 +1,15 @@
-import os
 import pytest
 from unittest.mock import patch, MagicMock
-from flask import Flask, Blueprint
-from app.controllers import watchlistController
-from app.auth import login_required
-
-PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
-TEMPLATE_DIR = os.path.join(PROJECT_ROOT, "app", "templates")
-STATIC_DIR = os.path.join(PROJECT_ROOT, "app", "static")
-
-
-def make_watchlist_blueprint():
-    """Create a fresh watchlist blueprint for each test session."""
-    bp = Blueprint("watchlist", __name__)
-    bp.route("/dashboard", methods=["GET"])(
-        login_required(watchlistController.dashboard)
-    )
-    bp.route("/watchlist", methods=["GET"])(
-        login_required(watchlistController.view_watchlist)
-    )
-    bp.route("/watchlist/add", methods=["GET", "POST"])(
-        login_required(watchlistController.add_title)
-    )
-    bp.route("/watchlist/edit/<int:id>", methods=["GET", "POST"])(
-        login_required(watchlistController.edit_title)
-    )
-    bp.route("/watchlist/delete/<int:id>", methods=["GET", "POST"])(
-        login_required(watchlistController.delete_title)
-    )
-    return bp
-
-
-@pytest.fixture(scope="module")
-def app():
-    app = Flask(
-        __name__,
-        template_folder=TEMPLATE_DIR,
-        static_folder=STATIC_DIR,
-    )
-    app.secret_key = "test-secret"
-    app.config["TESTING"] = True
-    app.register_blueprint(make_watchlist_blueprint())
-    return app
 
 
 @pytest.fixture
-def client(app):
-    with app.test_client() as client:
+def client(full_app):
+    with full_app.test_client() as client:
         yield client
 
 
 @pytest.fixture
 def logged_in_client(client):
-    """Helper: puts a user in the session with a CSRF token."""
     with client.session_transaction() as sess:
         sess["user_id"] = 1
         sess["user_name"] = "Rana"
