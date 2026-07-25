@@ -41,20 +41,24 @@
                 <div class="field-row">
                     <div class="field-group">
                         <label>Type <span class="req">*</span></label>
-                        <select name="type" required>
-                            <option value="movie" {% if entry.type == 'movie' %}selected{% endif %}>Movie</option>
-                            <option value="series" {% if entry.type == 'series' %}selected{% endif %}>Series</option>
-                            <option value="anime" {% if entry.type == 'anime' %}selected{% endif %}>Anime</option>
-                        </select>
+                        <div class="select-shell">
+                            <select name="type" required>
+                                <option value="movie" {% if entry.type == 'movie' %}selected{% endif %}>Movie</option>
+                                <option value="series" {% if entry.type == 'series' %}selected{% endif %}>Series</option>
+                                <option value="anime" {% if entry.type == 'anime' %}selected{% endif %}>Anime</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="field-group">
                         <label>Status</label>
-                        <select name="status">
-                            <option value="plan" {% if entry.status == 'plan' %}selected{% endif %}>Plan to Watch</option>
-                            <option value="watching" {% if entry.status == 'watching' %}selected{% endif %}>Watching</option>
-                            <option value="completed" {% if entry.status == 'completed' %}selected{% endif %}>Completed</option>
-                            <option value="dropped" {% if entry.status == 'dropped' %}selected{% endif %}>Dropped</option>
-                        </select>
+                        <div class="select-shell">
+                            <select name="status">
+                                <option value="plan" {% if entry.status == 'plan' %}selected{% endif %}>Plan to Watch</option>
+                                <option value="watching" {% if entry.status == 'watching' %}selected{% endif %}>Watching</option>
+                                <option value="completed" {% if entry.status == 'completed' %}selected{% endif %}>Completed</option>
+                                <option value="dropped" {% if entry.status == 'dropped' %}selected{% endif %}>Dropped</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 

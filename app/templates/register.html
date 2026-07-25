@@ -7,13 +7,13 @@
     <div class="carousel-panel" id="carouselPanel">
         <div class="carousel-slides">
             {% set slides = [
-                {"title": "Breaking Bad", "year": "2008", "type": "Series", "genre": "Crime Drama", "color": "#d47c0f", "poster": "https://image.tmdb.org/t/p/original/ggFHVNu6YYI5L9pCfOacjizRGt.jpg"},
-                {"title": "Interstellar", "year": "2014", "type": "Movie", "genre": "Sci-Fi", "color": "#4a90b8", "poster": "https://image.tmdb.org/t/p/original/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"},
-                {"title": "Peaky Blinders", "year": "2013", "type": "Series", "genre": "Crime Drama", "color": "#9b2335", "poster": "https://image.tmdb.org/t/p/original/vUUqzWa2LnHIVqkaKVlVGkVcZIW.jpg"},
-                {"title": "Dune", "year": "2021", "type": "Movie", "genre": "Sci-Fi Epic", "color": "#c8963e", "poster": "https://image.tmdb.org/t/p/original/gDzOcq0pfeCeqMBwKIJlSmQpjkZ.jpg"},
-                {"title": "Dark", "year": "2017", "type": "Series", "genre": "Psychological Thriller", "color": "#3d7a6e", "poster": "https://image.tmdb.org/t/p/original/apbrbWs8M9lyOpJYU5WXrpFbk1Z.jpg"},
-                {"title": "Oppenheimer", "year": "2023", "type": "Movie", "genre": "Historical Drama", "color": "#c4622d", "poster": "https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"}
-            ] %}
+    {"title": "Breaking Bad", "year": "2008", "type": "Series", "genre": "Crime Drama", "color": "#d47c0f", "poster": "https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg"},
+    {"title": "Interstellar", "year": "2014", "type": "Movie", "genre": "Sci-Fi", "color": "#4a90b8", "poster": "https://image.tmdb.org/t/p/original/5XNQBqnBwPA9yT0jZ0p3s8bbLh0.jpg"},
+    {"title": "Peaky Blinders", "year": "2013", "type": "Series", "genre": "Crime Drama", "color": "#9b2335", "poster": "https://image.tmdb.org/t/p/original/dzq83RHwQcnP6WGJ6YkenIqeaa5.jpg"},
+    {"title": "Dune", "year": "2021", "type": "Movie", "genre": "Sci-Fi Epic", "color": "#c8963e", "poster": "https://image.tmdb.org/t/p/original/qVgZu5BTx6pu4owCvVOm4zjTfOi.jpg"},
+    {"title": "Dark", "year": "2017", "type": "Series", "genre": "Psychological Thriller", "color": "#3d7a6e", "poster": "https://image.tmdb.org/t/p/original/3jDXL4Xvj3AzDOF6UH1xeyHW8MH.jpg"},
+    {"title": "Oppenheimer", "year": "2023", "type": "Movie", "genre": "Historical Drama", "color": "#c4622d", "poster": "https://image.tmdb.org/t/p/original/neeNHeXjMF5fXoCJRsOmkNGC7q.jpg"}
+] %}
             {% for slide in slides %}
             <div class="carousel-slide {% if loop.first %}active{% endif %}" data-color="{{ slide.color }}">
                 <div class="slide-poster" style="background-image: url('{{ slide.poster }}');"></div>

@@ -21,25 +21,31 @@
 
         <form class="filter-bar" method="GET" action="{{ url_for('watchlist.view_watchlist') }}">
             <input type="text" name="search" placeholder="Search titles..." value="{{ search }}" class="filter-search">
-            <select name="type" class="filter-select">
-                <option value="">All Types</option>
-                <option value="movie" {% if filter_type == 'movie' %}selected{% endif %}>Movie</option>
-                <option value="series" {% if filter_type == 'series' %}selected{% endif %}>Series</option>
-                <option value="anime" {% if filter_type == 'anime' %}selected{% endif %}>Anime</option>
-            </select>
-            <select name="status" class="filter-select">
-                <option value="">All Status</option>
-                <option value="watching" {% if filter_status == 'watching' %}selected{% endif %}>Watching</option>
-                <option value="completed" {% if filter_status == 'completed' %}selected{% endif %}>Completed</option>
-                <option value="plan" {% if filter_status == 'plan' %}selected{% endif %}>Plan to Watch</option>
-                <option value="dropped" {% if filter_status == 'dropped' %}selected{% endif %}>Dropped</option>
-            </select>
-            <select name="sort" class="filter-select">
-                <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest First</option>
-                <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest First</option>
-                <option value="title" {% if sort == 'title' %}selected{% endif %}>A-Z</option>
-                <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Top Rated</option>
-            </select>
+            <div class="filter-select-shell">
+                <select name="type" class="filter-select">
+                    <option value="">All Types</option>
+                    <option value="movie" {% if filter_type == 'movie' %}selected{% endif %}>Movie</option>
+                    <option value="series" {% if filter_type == 'series' %}selected{% endif %}>Series</option>
+                    <option value="anime" {% if filter_type == 'anime' %}selected{% endif %}>Anime</option>
+                </select>
+            </div>
+            <div class="filter-select-shell">
+                <select name="status" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="watching" {% if filter_status == 'watching' %}selected{% endif %}>Watching</option>
+                    <option value="completed" {% if filter_status == 'completed' %}selected{% endif %}>Completed</option>
+                    <option value="plan" {% if filter_status == 'plan' %}selected{% endif %}>Plan to Watch</option>
+                    <option value="dropped" {% if filter_status == 'dropped' %}selected{% endif %}>Dropped</option>
+                </select>
+            </div>
+            <div class="filter-select-shell">
+                <select name="sort" class="filter-select">
+                    <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest First</option>
+                    <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest First</option>
+                    <option value="title" {% if sort == 'title' %}selected{% endif %}>A-Z</option>
+                    <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Top Rated</option>
+                </select>
+            </div>
             <button type="submit" class="btn-ghost">Filter</button>
             {% if search or filter_type or filter_status or sort != 'newest' %}
             <a href="{{ url_for('watchlist.view_watchlist') }}" class="btn-ghost">Clear</a>
