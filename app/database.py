@@ -41,10 +41,16 @@ def create_tables():
             year INT,
             rating INT,
             notes TEXT,
+            poster_url VARCHAR(500),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )
     """)
+    # Add poster_url column if it doesn't exist (for existing databases)
+    try:
+        cursor.execute("ALTER TABLE watchlist ADD COLUMN poster_url VARCHAR(500)")
+    except Exception:
+        pass  # Column already exists
     conn.commit()
     cursor.close()
     conn.close()
