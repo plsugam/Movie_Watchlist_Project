@@ -7,16 +7,17 @@
     <div class="carousel-panel" id="carouselPanel">
         <div class="carousel-slides">
             {% set slides = [
-                {"title": "Breaking Bad", "year": "2008", "type": "Series", "genre": "Crime Drama", "color": "#d47c0f"},
-                {"title": "Interstellar", "year": "2014", "type": "Movie", "genre": "Sci-Fi", "color": "#4a90b8"},
-                {"title": "Peaky Blinders", "year": "2013", "type": "Series", "genre": "Crime Drama", "color": "#9b2335"},
-                {"title": "Dune", "year": "2021", "type": "Movie", "genre": "Sci-Fi Epic", "color": "#c8963e"},
-                {"title": "Dark", "year": "2017", "type": "Series", "genre": "Psychological Thriller", "color": "#3d7a6e"},
-                {"title": "Oppenheimer", "year": "2023", "type": "Movie", "genre": "Historical Drama", "color": "#c4622d"}
+                {"title": "Breaking Bad", "year": "2008", "type": "Series", "genre": "Crime Drama", "color": "#d47c0f", "poster": "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg"},
+                {"title": "Interstellar", "year": "2014", "type": "Movie", "genre": "Sci-Fi", "color": "#4a90b8", "poster": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"},
+                {"title": "Peaky Blinders", "year": "2013", "type": "Series", "genre": "Crime Drama", "color": "#9b2335", "poster": "https://image.tmdb.org/t/p/w500/vUUqzWa2LnHIVqkaKVlVGkPaQkR.jpg"},
+                {"title": "Dune", "year": "2021", "type": "Movie", "genre": "Sci-Fi Epic", "color": "#c8963e", "poster": "https://image.tmdb.org/t/p/w500/d5NXSklpcvkCgnpLIOUh3p9ggQQ.jpg"},
+                {"title": "Dark", "year": "2017", "type": "Series", "genre": "Psychological Thriller", "color": "#3d7a6e", "poster": "https://image.tmdb.org/t/p/w500/apbrbWs5M0FMkj7PgNBo5UMnNZC.jpg"},
+                {"title": "Oppenheimer", "year": "2023", "type": "Movie", "genre": "Historical Drama", "color": "#c4622d", "poster": "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"}
             ] %}
             {% for slide in slides %}
             <div class="carousel-slide {% if loop.first %}active{% endif %}" data-color="{{ slide.color }}">
-                <div class="slide-bg" style="background: radial-gradient(ellipse at 30% 60%, {{ slide.color }}22 0%, transparent 70%);"></div>
+                <div class="slide-poster" style="background-image: url('{{ slide.poster }}');"></div>
+                <div class="slide-overlay"></div>
                 <div class="slide-content">
                     <div class="slide-tag">{{ slide.type }} · {{ slide.year }}</div>
                     <h2 class="slide-title">{{ slide.title }}</h2>
@@ -41,40 +42,27 @@
             <h1 class="form-title">Create an account</h1>
             <p class="form-sub">Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
 
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="flash flash-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-
             <form method="POST" class="auth-form" id="register-form">
                 <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
-
                 <div class="form-group">
                     <label>Full Name</label>
                     <input type="text" name="name" id="name" placeholder="Your name">
                     <span class="error-msg" id="name-error"></span>
                 </div>
-
                 <div class="form-group">
                     <label>Email</label>
                     <input type="email" name="email" id="email" placeholder="you@example.com">
                     <span class="error-msg" id="email-error"></span>
                 </div>
-
                 <div class="form-group">
                     <label>Password</label>
                     <input type="password" name="password" id="password" placeholder="Min. 6 characters">
                     <span class="error-msg" id="password-error"></span>
                 </div>
-
                 <button type="submit" class="submit-btn" id="submitBtn">Create Account</button>
             </form>
         </div>
     </div>
-
 </div>
 <script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
 <script src="{{ url_for('static', filename='js/validation.js') }}"></script>

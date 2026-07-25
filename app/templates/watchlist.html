@@ -14,19 +14,10 @@
     </nav>
 
     <div class="page-content">
-
         <div class="page-header">
             <h1>My Watchlist</h1>
             <a href="{{ url_for('watchlist.add_title') }}" class="btn-primary">+ Add Title</a>
         </div>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="flash flash-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
 
         <form class="filter-bar" method="GET" action="{{ url_for('watchlist.view_watchlist') }}">
             <input type="text" name="search" placeholder="Search titles..." value="{{ search }}" class="filter-search">
@@ -59,6 +50,12 @@
         <div class="watchlist-grid">
             {% for t in titles %}
             <div class="wl-card">
+                {% if t.poster_url %}
+                <img src="{{ t.poster_url }}" alt="{{ t.title }}" class="wl-poster" loading="lazy">
+                {% else %}
+                <div class="wl-poster-placeholder"></div>
+                {% endif %}
+
                 <div class="wl-card-top">
                     <div>
                         <div class="wl-type-badge type-{{ t.type }}">{{ t.type }}</div>
@@ -116,7 +113,6 @@
             {% endif %}
         </div>
         {% endif %}
-
     </div>
 </div>
 <script src="{{ url_for('static', filename='js/watchlist.js') }}"></script>

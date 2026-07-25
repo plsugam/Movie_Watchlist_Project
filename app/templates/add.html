@@ -19,23 +19,25 @@
             <a href="{{ url_for('watchlist.view_watchlist') }}" class="btn-ghost">← Back</a>
         </div>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="flash flash-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
         <div class="form-card">
-            <form method="POST" class="inner-form" id="add-form">
+            <form method="POST" class="inner-form" id="add-form" data-tmdb-key="{{ tmdb_api_key }}">
                 <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
+                <input type="hidden" name="poster_url" id="poster_url">
 
                 <div class="field-row">
-                    <div class="field-group full">
+                    <div class="field-group full" style="position:relative;">
                         <label>Title <span class="req">*</span></label>
-                        <input type="text" name="title" id="title" placeholder="e.g. Inception">
+                        <input type="text" name="title" id="title" placeholder="Search for a movie or series…" autocomplete="off">
                         <span class="error-msg" id="title-error"></span>
+                        <div class="tmdb-dropdown" id="tmdb-dropdown"></div>
+                    </div>
+                </div>
+
+                <!-- Poster preview -->
+                <div class="field-row" id="poster-row" style="display:none;">
+                    <div class="field-group full">
+                        <label>Poster Preview</label>
+                        <img id="poster-preview" src="" alt="Poster" class="poster-preview-img" style="display:none;">
                     </div>
                 </div>
 
@@ -84,7 +86,7 @@
                 <div class="field-row">
                     <div class="field-group full">
                         <label>Notes</label>
-                        <textarea name="notes" id="notes" placeholder="Your thoughts, quotes, recommendations..."></textarea>
+                        <textarea name="notes" id="notes" placeholder="Your thoughts, quotes, recommendations…"></textarea>
                     </div>
                 </div>
 
@@ -96,5 +98,19 @@
         </div>
     </div>
 </div>
+
+<!-- Show poster row when poster is selected -->
+<script>
+    const posterPreview = document.getElementById('poster-preview');
+    const posterRow = document.getElementById('poster-row');
+    const observer = new MutationObserver(() => {
+        if (posterPreview.style.display !== 'none') {
+            posterRow.style.display = 'grid';
+        }
+    });
+    observer.observe(posterPreview, { attributes: true, attributeFilter: ['style'] });
+</script>
+
 <script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tmdb_search.js') }}"></script>
 {% endblock %}

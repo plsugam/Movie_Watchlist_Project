@@ -6,21 +6,25 @@
     <title>{% block title %}Reellog{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/validation.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
 </head>
 <body>
-    {% if not hide_flash %}
-    <div class="flash-container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="flash flash-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
-    {% endif %}
-
     {% block content %}{% endblock %}
+
+    <!-- Toast notification — floating, overlays everything -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="toast toast-{{ category }}" id="toast">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <script>
+        // Auto-dismiss toast after 3.5s
+        const toast = document.getElementById('toast');
+        if (toast) {
+            setTimeout(() => toast.classList.add('toast-hide'), 3500);
+        }
+    </script>
 </body>
 </html>
