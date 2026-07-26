@@ -4,7 +4,7 @@
 <div class="page-wrapper">
 
     <nav class="topnav">
-        <span class="logo">Reellog</span>
+        <a href="{{ url_for('watchlist.dashboard') }}" class="logo">Reellog</a>
         <div class="nav-links">
             <a href="{{ url_for('watchlist.dashboard') }}">Dashboard</a>
             <a href="{{ url_for('watchlist.view_watchlist') }}" class="active">Watchlist</a>
@@ -18,14 +18,6 @@
             <h1>Edit Title</h1>
             <a href="{{ url_for('watchlist.view_watchlist') }}" class="btn-ghost">← Back</a>
         </div>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="flash flash-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
 
         <div class="form-card">
             <form method="POST" class="inner-form">
@@ -41,24 +33,20 @@
                 <div class="field-row">
                     <div class="field-group">
                         <label>Type <span class="req">*</span></label>
-                        <div class="select-shell">
-                            <select name="type" required>
-                                <option value="movie" {% if entry.type == 'movie' %}selected{% endif %}>Movie</option>
-                                <option value="series" {% if entry.type == 'series' %}selected{% endif %}>Series</option>
-                                <option value="anime" {% if entry.type == 'anime' %}selected{% endif %}>Anime</option>
-                            </select>
-                        </div>
+                        <select name="type" required>
+                            <option value="movie" {% if entry.type == 'movie' %}selected{% endif %}>Movie</option>
+                            <option value="series" {% if entry.type == 'series' %}selected{% endif %}>Series</option>
+                            <option value="anime" {% if entry.type == 'anime' %}selected{% endif %}>Anime</option>
+                        </select>
                     </div>
                     <div class="field-group">
                         <label>Status</label>
-                        <div class="select-shell">
-                            <select name="status">
-                                <option value="plan" {% if entry.status == 'plan' %}selected{% endif %}>Plan to Watch</option>
-                                <option value="watching" {% if entry.status == 'watching' %}selected{% endif %}>Watching</option>
-                                <option value="completed" {% if entry.status == 'completed' %}selected{% endif %}>Completed</option>
-                                <option value="dropped" {% if entry.status == 'dropped' %}selected{% endif %}>Dropped</option>
-                            </select>
-                        </div>
+                        <select name="status">
+                            <option value="plan" {% if entry.status == 'plan' %}selected{% endif %}>Plan to Watch</option>
+                            <option value="watching" {% if entry.status == 'watching' %}selected{% endif %}>Watching</option>
+                            <option value="completed" {% if entry.status == 'completed' %}selected{% endif %}>Completed</option>
+                            <option value="dropped" {% if entry.status == 'dropped' %}selected{% endif %}>Dropped</option>
+                        </select>
                     </div>
                 </div>
 
@@ -69,14 +57,26 @@
                     </div>
                     <div class="field-group">
                         <label>Year</label>
-                        <input type="number" name="year" value="{{ entry.year or '' }}" placeholder="e.g. 2023" min="1900" max="2030">
+                        <div class="number-input-wrap">
+                            <input type="number" name="year" id="year" value="{{ entry.year or '' }}" placeholder="e.g. 2023" min="1900" max="2030">
+                            <div class="spin-btns">
+                                <button type="button" onclick="spinUp('year', 2030)">▲</button>
+                                <button type="button" onclick="spinDown('year', 1900)">▼</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="field-row">
                     <div class="field-group">
                         <label>Rating <span class="muted">(1–5)</span></label>
-                        <input type="number" name="rating" value="{{ entry.rating or '' }}" placeholder="e.g. 4" min="1" max="5">
+                        <div class="number-input-wrap">
+                            <input type="number" name="rating" id="rating" value="{{ entry.rating or '' }}" placeholder="e.g. 4" min="1" max="5">
+                            <div class="spin-btns">
+                                <button type="button" onclick="spinUp('rating', 5)">▲</button>
+                                <button type="button" onclick="spinDown('rating', 1)">▼</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -95,4 +95,5 @@
         </div>
     </div>
 </div>
+<script src="{{ url_for('static', filename='js/spinners.js') }}"></script>
 {% endblock %}

@@ -4,7 +4,7 @@
 <div class="page-wrapper">
 
     <nav class="topnav">
-        <span class="logo">Reellog</span>
+        <a href="{{ url_for('watchlist.dashboard') }}" class="logo">Reellog</a>
         <div class="nav-links">
             <a href="{{ url_for('watchlist.dashboard') }}" class="active">Dashboard</a>
             <a href="{{ url_for('watchlist.view_watchlist') }}">Watchlist</a>

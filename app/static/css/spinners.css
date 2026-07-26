@@ -1,0 +1,61 @@
+/* =====================
+   CUSTOM NUMBER SPINNERS
+   ===================== */
+
+/* Hide native spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Number input wrapper */
+.number-input-wrap {
+    position: relative;
+    display: flex;
+}
+
+.number-input-wrap input {
+    flex: 1;
+    padding-right: 32px;
+}
+
+.spin-btns {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    width: 28px;
+}
+
+.spin-btns button {
+    flex: 1;
+    background: #2a2a2a;
+    border: none;
+    border-left: 1px solid #333;
+    color: #666;
+    cursor: pointer;
+    font-size: 8px;
+    padding: 0;
+    transition: background 0.15s, color 0.15s;
+    line-height: 1;
+}
+
+.spin-btns button:first-child {
+    border-radius: 0 6px 0 0;
+    border-bottom: 1px solid #333;
+}
+
+.spin-btns button:last-child {
+    border-radius: 0 0 6px 0;
+}
+
+.spin-btns button:hover {
+    background: #333;
+    color: var(--accent);
+}
