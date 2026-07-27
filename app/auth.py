@@ -10,3 +10,16 @@ def login_required(f):
             return redirect(url_for("auth.login"))
         return f(*args, **kwargs)
     return decorated_function
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "user_id" not in session:
+            flash("Please log in to continue.", "danger")
+            return redirect(url_for("auth.login"))
+        if session.get("role") != "admin":
+            flash("Admin access required.", "danger")
+            return redirect(url_for("watchlist.dashboard"))
+        return f(*args, **kwargs)
+    return decorated_function

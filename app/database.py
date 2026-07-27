@@ -20,6 +20,7 @@ def get_connection():
 def create_tables():
     conn = get_connection()
     cursor = conn.cursor()
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -30,6 +31,7 @@ def create_tables():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS watchlist (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -46,11 +48,22 @@ def create_tables():
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )
     """)
-    # Add poster_url column if it doesn't exist (for existing databases)
+
     try:
         cursor.execute("ALTER TABLE watchlist ADD COLUMN poster_url VARCHAR(500)")
     except Exception:
-        pass  # Column already exists
+        pass
+
+    # Create default admin user if not exists
+    cursor.execute("SELECT * FROM users WHERE email = %s", ("admin@reellog.com",))
+    if not cursor.fetchone():
+        from werkzeug.security import generate_password_hash
+        cursor.execute(
+            "INSERT INTO users (name, email, password, role) VALUES (%s, %s, %s, %s)",
+            ("Admin", "admin@reellog.com", generate_password_hash("Admin@123"), "admin"),
+        )
+        print("Default admin created: admin@reellog.com / Admin@123")
+
     conn.commit()
     cursor.close()
     conn.close()
