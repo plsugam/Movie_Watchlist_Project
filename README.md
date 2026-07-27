@@ -89,6 +89,8 @@ Reellog/
     │   ├── login.html
     │   ├── register.html
     │   ├── dashboard.html
+    │   ├── admin.html
+    │   ├── home.html
     │   ├── watchlist.html
     │   ├── add.html
     │   ├── edit.html
@@ -99,10 +101,13 @@ Reellog/
     └── static/
         ├── css/
         │   ├── style.css
+        │   ├── spinners.css
         │   ├── validation.css
-        │   └── nav.css
+        │   └── filter_additions.css
         └── js/
             ├── carousel.js
+            ├── spinners.js
+            ├── tbdb_search.js
             ├── watchlist.js
             └── validation.js
 ```
@@ -220,6 +225,6 @@ This project was version controlled from the beginning using Git. The repository
 
 **GitHub:** https://github.com/plsugam/Movie_Watchlist_Project
 
-**Demo Video:** *(link to be added after recording)*
+Demo Video: https://youtu.be/UbSJyLJkDug
 
 Commits were made incrementally throughout development, with each logical change committed separately to demonstrate continuous progress.
